@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { portfolioData } from './data/portfolioData';
 import Navbar from './components/Common/Navbar';
 import HeroSection from './components/Header/HeroSection';
@@ -8,30 +9,10 @@ import CertSection from './components/Sections/CertSection';
 import EducationSection from './components/Sections/EducationSection';
 import Footer from './components/Common/Footer';
 import FloatingTopBtn from './components/Common/FloatingTopBtn';
+import ProjectDetailPage from './components/ProjectDetail/ProjectDetailPage';
 
-export default function App() {
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme');
-      if (saved) return saved === 'dark';
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return false;
-  });
-
+function HomeView({ darkMode, setDarkMode }) {
   const [activeSection, setActiveSection] = useState('project-1');
-
-  // 다크 모드 적용
-  useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
 
   // 부드러운 스크롤 이동 핸들러 (상단 헤더 오프셋 반영)
   const scrollToSection = useCallback((id) => {
@@ -126,5 +107,48 @@ export default function App() {
       {/* 최상단 이동 플로팅 버튼 */}
       <FloatingTopBtn />
     </div>
+  );
+}
+
+export default function App() {
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved === 'dark';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
+
+  // 다크 모드 HTML 클래스 적용
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
+
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={<HomeView darkMode={darkMode} setDarkMode={setDarkMode} />}
+      />
+      <Route
+        path="/project/:id"
+        element={
+          <ProjectDetailPage
+            projects={portfolioData.projects}
+            profile={portfolioData.profile}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+          />
+        }
+      />
+    </Routes>
   );
 }

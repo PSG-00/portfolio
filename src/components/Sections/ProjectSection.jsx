@@ -1,5 +1,6 @@
 import React from 'react';
-import { ExternalLink, CheckCircle2, Calendar, UserCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ExternalLink, CheckCircle2, Calendar, UserCheck, ArrowRight } from 'lucide-react';
 import { GithubIcon } from '../Common/Icons';
 
 export default function ProjectSection({ project }) {
@@ -53,17 +54,17 @@ export default function ProjectSection({ project }) {
               </div>
             </div>
 
-            {/* 링크 버튼들 */}
-            <div className="flex items-center gap-3 mt-4">
+            {/* 링크 버튼들: [라이브 데모] - [GitHub] - [프로젝트 상세] */}
+            <div className="flex flex-wrap items-center gap-2 mt-4">
               {project.links?.demo && (
                 <a
                   href={project.links.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold transition-all shadow-sm shadow-sky-500/30"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold transition-all border border-slate-200 dark:border-slate-700"
                 >
-                  <ExternalLink size={16} />
-                  <span>라이브 데모 보기</span>
+                  <ExternalLink size={14} />
+                  <span>라이브 데모</span>
                 </a>
               )}
               {project.links?.github && (
@@ -71,12 +72,19 @@ export default function ProjectSection({ project }) {
                   href={project.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm font-semibold transition-all border border-slate-200 dark:border-slate-700"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold transition-all border border-slate-200 dark:border-slate-700"
                 >
-                  <GithubIcon size={16} />
+                  <GithubIcon size={14} />
                   <span>GitHub</span>
                 </a>
               )}
+              <Link
+                to={`/project/${project.id}`}
+                className="ml-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shadow-sm shadow-sky-500/25 group"
+              >
+                <span>프로젝트 상세</span>
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
             </div>
           </div>
 
