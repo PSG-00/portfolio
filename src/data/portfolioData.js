@@ -1,14 +1,17 @@
 export const portfolioData = {
   profile: {
-    name: "박성준",
-    role: "Frontend & Fullstack Developer",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80",
-    statusBadge: "🚀 새로운 도전을 준비 중입니다",
-    email: "developer@example.com",
+    name: "박성국",
+    role: "Backend & DevOps Developer",
+    avatar: "/박성국.jpg",
+    statusBadge: "새로운 도전을 준비 중입니다",
+    email: "cdjsdj1902@gmail.com",
     github: "https://github.com",
     blog: "https://velog.io",
     linkedin: "https://linkedin.com",
-    resumeUrl: "#",
+    resumeUrl: "/resume.pdf",
+    portfolioPdfUrl: "/portfolio.pdf",
+    education: `조선대학교 컴퓨터공학과 졸업
+(4.0 / 4.5)`,
   },
 
   about: {
@@ -30,11 +33,11 @@ React, TypeScript, Next.js 기반의 직관적이고 반응이 빠른 인터페�
   },
 
   quickNavItems: [
-    { id: "project-1", label: "프로젝트 1", category: "Project", desc: "AI 기반 스마트 대시보드" },
-    { id: "project-2", label: "프로젝트 2", category: "Project", desc: "실시간 협업 웹 에디터" },
-    { id: "career", label: "경력", category: "Career", desc: "실무 및 프로젝트 이력" },
+    { id: "project-1", label: "모두의 플리", category: "Project", desc: "글로벌 컨텐츠 큐레이팅 플랫폼" },
+    { id: "project-2", label: "모뉴", category: "Project", desc: "키워드 기반 관심사 뉴스 수집 플랫폼" },
+    { id: "career", label: "경력", category: "Career", desc: "실무 이력" },
     { id: "certifications", label: "자격증", category: "Certificates", desc: "공인 기술 및 어학 자격" },
-    { id: "education", label: "활동 및 교육", category: "Activities", desc: "부트캠프, 해커톤 및 교육" },
+    { id: "education", label: "교육 및 활동", category: "Activities", desc: "부트캠프, 해커톤 및 교육 이수" },
   ],
 
   projects: [
@@ -42,10 +45,10 @@ React, TypeScript, Next.js 기반의 직관적이고 반응이 빠른 인터페�
       id: "project-1",
       number: "01",
       badge: "대표 프로젝트",
-      title: "AI 기반 데이터 시각화 & 인사이트 대시보드",
-      subtitle: "실시간 대용량 메트릭 모니터링 및 AI 자동 요약 리포트 플랫폼",
-      period: "2024.03 - 2024.08 (5개월)",
-      role: "프론트엔드 리드 (기여도 70%)",
+      title: "모두의 플리 | 글로벌 컨텐츠 큐레이팅 플랫폼",
+      subtitle: "외부 API 기반 최신 컨텐츠 자동 수집 및 큐레이팅 플랫폼",
+      period: "2026.05 - 2024.07 (3개월)",
+      role: "외부 API 수집 및 배포 (기여도 35%)",
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&fit=crop&q=80",
       description: "다양한 데이터 소스로부터 유입되는 일일 10만 건 이상의 메트릭을 실시간 차트로 시각화하고, LLM을 결합해 주간 이상치 분석 리포트를 1초 만에 자동 생성하는 서비스입니다.",
       keyFeatures: [
@@ -56,7 +59,7 @@ React, TypeScript, Next.js 기반의 직관적이고 반응이 빠른 인터페�
       ],
       techStack: ["React", "TypeScript", "Tailwind CSS", "Recharts", "Zustand", "FastAPI"],
       links: {
-        demo: "https://example.com/demo1",
+        demo: "https://mopl.psg-dev.site",
         github: "https://github.com/example/project-1",
       },
       detailSpec: {
@@ -204,10 +207,10 @@ React, TypeScript, Next.js 기반의 직관적이고 반응이 빠른 인터페�
       id: "project-2",
       number: "02",
       badge: "팀 협업 프로젝트",
-      title: "동시 접속 웹 기반 마크다운 문서 협업 도구",
-      subtitle: "CRDT 알고리즘을 적용한 초저지연 실시간 협업 에디터",
-      period: "2023.09 - 2023.12 (4개월)",
-      role: "풀스택 개발 및 알고리즘 구현 (기여도 50%)",
+      title: "MONEW | 키워드 기반 관심사 뉴스 수집 플랫폼",
+      subtitle: "키워드 기반으로 뉴스를 수집하고, 댓글을 남길 수 있는 플랫폼",
+      period: "2026.03 - 2026.5 (2개월)",
+      role: "RSS 기반 뉴스 기사 수집 (기여도 25%)",
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&auto=format&fit=crop&q=80",
       description: "여러 사용자가 동시에 문서를 작성하고 충돌 없이 실시간으로 동기화할 수 있는 마크다운 기반의 협업 지식 저장소 서비스입니다.",
       keyFeatures: [
@@ -218,7 +221,7 @@ React, TypeScript, Next.js 기반의 직관적이고 반응이 빠른 인터페�
       ],
       techStack: ["React", "Next.js", "Node.js", "WebSocket", "Yjs", "Tailwind CSS", "PostgreSQL"],
       links: {
-        demo: "https://example.com/demo2",
+        demo: "https://monew.psg-dev.site",
         github: "https://github.com/example/project-2",
       },
       detailSpec: {
@@ -367,58 +370,32 @@ React, TypeScript, Next.js 기반의 직관적이고 반응이 빠른 인터페�
 
   careers: [
     {
-      period: "2023.01 - 현재",
-      company: "(주)테크솔루션스",
-      role: "프론트엔드 엔지니어 / 사원",
-      type: "정규직",
-      description: "B2B SaaS 솔루션의 프론트엔드 신규 기능 개발 및 디자인 시스템 구축 주도",
+      period: "2024.09 - 2024.12",
+      company: "(주)남양에스티엔",
+      role: "ICT 부서 업무 보조 / 인턴",
+      type: "인턴",
+      description: "버스 정보 시스템(BIS) 유지보수 업무 보조",
       achievements: [
-        "사내 디자인 시스템 컴포넌트 30종 개발 및 문서화로 신규 페이지 개발 공수 35% 단축",
-        "Webpack에서 Vite로 번들러 마이그레이션 진행하여 로컬 빌드 속도 7배 향상",
-        "주요 사용자 흐름(결제/대시보드) E2E 테스트 도입 (Playwright) 및 커버리지 80% 달성"
+        "버스 차량 단말기 유지 보수 보고서 OCR 기반 자동화 구현",
+        "기업 부설 연구소 연구 노트 작성 보조",
+        "버스 도착 정보 안내기(BIT) 유지보수 보조"
       ],
-      skills: ["React", "TypeScript", "Tailwind CSS", "Storybook", "Jest"]
+      skills: ["Naver OCR", "Python"]
     },
-    {
-      period: "2022.04 - 2022.12",
-      company: "스타트업 넥스트랩",
-      role: "웹 프론트엔드 인턴",
-      type: "인턴십",
-      description: "반응형 랜딩 페이지 제작 및 고객 어드민 관리자 페이지 개발",
-      achievements: [
-        "모바일 최적화 및 웹 접근성(A11y) 기준 준수로 Lighthouse 접근성 점수 98점 획득",
-        "반응형 레이아웃 리팩토링으로 모바일 사용자 이탈률 18% 감소 기여"
-      ],
-      skills: ["JavaScript", "HTML5/CSS3", "React", "REST API"]
-    }
   ],
 
   certifications: [
     {
-      name: "정보처리기사",
-      issuer: "한국산업인력공단",
-      date: "2023.06",
-      status: "취득",
-      badgeColor: "sky"
-    },
-    {
       name: "SQLD (SQL 개발자)",
       issuer: "한국데이터산업진흥원",
-      date: "2023.09",
+      date: "2024.12",
       status: "취득",
-      badgeColor: "emerald"
+      badgeColor: "indigo"
     },
     {
-      name: "AWS Certified Solutions Architect - Associate",
-      issuer: "Amazon Web Services",
-      date: "2024.02",
-      status: "취득",
-      badgeColor: "amber"
-    },
-    {
-      name: "TOEIC Speaking AL (170점)",
-      issuer: "ETS",
-      date: "2023.11",
+      name: "1종 보통 운전면허증",
+      issuer: "전라남도경찰청장",
+      date: "2021.7",
       status: "취득",
       badgeColor: "indigo"
     }
@@ -426,22 +403,16 @@ React, TypeScript, Next.js 기반의 직관적이고 반응이 빠른 인터페�
 
   education: [
     {
-      period: "2023.06 - 2023.12",
-      title: "풀스택 웹 서비스 개발 부트캠프 수료",
-      organization: "멋쟁이사자처럼 / K-Digital Training",
-      details: "800시간 집중 코스. React, Node.js 기반 실무 프로젝트 3회 진행 및 최우수 프로젝트상 수상"
+      period: "2025.12 - 2026.7",
+      title: "AWS 활용 Spring 백엔드 개발자 실무 부트캠프",
+      organization: "코드잇 / K-Digital Training",
+      details: "1250시간 집중 코스. Spring Boot 기반 실무 협업 프로젝트 3회 진행"
     },
     {
-      period: "2023.08",
-      title: "제2회 대학생 오픈소스 SW 해커톤 장려상",
-      organization: "오픈소스소프트웨어재단",
-      details: "공공 데이터를 활용한 교통 약자 지원 웹서비스 48시간 내 개발"
-    },
-    {
-      period: "2018.03 - 2023.02",
-      title: "컴퓨터공학과 학사 졸업",
-      organization: "한국대학교",
-      details: "자료구조, 알고리즘, 컴퓨터구조, 데이터베이스, 네트워크 등 CS 기초 전공 이수 (학점 3.8 / 4.5)"
+      period: "2024.03 - 2024.8",
+      title: "멋쟁이사자처럼 대학 12기",
+      organization: "멋쟁이사자처럼",
+      details: "학교 자체 스터디 및 프로젝트 제작, 아이디어톤, 무박 2일 해커톤 진행"
     }
   ]
 };

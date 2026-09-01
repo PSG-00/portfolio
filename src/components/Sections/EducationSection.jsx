@@ -16,7 +16,7 @@ export default function EducationSection({ education }) {
                 Education & Activities
               </span>
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                활동 및 교육
+                교육 및 활동
               </h3>
             </div>
           </div>
