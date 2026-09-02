@@ -1,45 +1,27 @@
 import React, { useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft,
   Calendar,
   UserCheck,
   ExternalLink,
-  Target,
-  FileCode,
-  Layers,
-  Database,
-  Wrench,
   Sun,
-  Moon
+  Moon,
 } from 'lucide-react';
 import { GithubIcon } from '../Common/Icons';
-import RequirementsView from './RequirementsView';
-import DiagramView from './DiagramView';
-import ErdView from './ErdView';
-import TroubleShootingView from './TroubleShootingView';
+import RoleOverviewSection from './RoleOverviewSection';
+import EngineeringStorySection from './EngineeringStorySection';
 import FloatingTopBtn from '../Common/FloatingTopBtn';
 import Footer from '../Common/Footer';
 
 export default function ProjectDetailPage({ projects, profile, darkMode, setDarkMode }) {
   const { id } = useParams();
-  const navigate = useNavigate();
-
   const project = projects.find((p) => p.id === id) || projects[0];
 
   // 페이지 진입 시 최상단으로 스크롤
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
-
-  const scrollToSubSection = (sectionId) => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      const yOffset = -70;
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100/60 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans">
@@ -56,8 +38,10 @@ export default function ProjectDetailPage({ projects, profile, darkMode, setDark
 
           <div className="flex items-center gap-3">
             <span className="hidden sm:inline-block text-xs font-mono text-slate-400">
-              Project Detail View
+              Technical Spec & Engineering Story
             </span>
+
+            {/* 다크모드 토글 */}
             <button
               onClick={() => setDarkMode(!darkMode)}
               className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -69,10 +53,10 @@ export default function ProjectDetailPage({ projects, profile, darkMode, setDark
         </div>
       </header>
 
-      {/* 히어로 요약 영역 */}
+      {/* 프로젝트 히어로 요약 영역 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
         <div className="glass-card rounded-3xl p-6 sm:p-10 border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 shadow-sm">
-          {/* 상단 뱃지 & 타이틀 */}
+          {/* 상단 넘버링 & 타이틀 */}
           <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-slate-200/70 dark:border-slate-800">
             <div className="flex items-center gap-3">
               <span className="text-4xl sm:text-5xl font-black font-mono text-sky-500/80">
@@ -101,24 +85,15 @@ export default function ProjectDetailPage({ projects, profile, darkMode, setDark
             </div>
           </div>
 
-          {/* 서브 설명 및 링크 버튼 */}
+          {/* 서브 설명 및 기술 스택 & 링크 */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 items-center">
             <div className="lg:col-span-8 space-y-4">
               <p className="text-base sm:text-lg font-medium text-slate-700 dark:text-slate-200 leading-relaxed">
                 {project.subtitle}
               </p>
-
-              {project.detailSpec?.background && (
-                <div className="p-4 rounded-2xl bg-sky-50/70 dark:bg-sky-950/40 border border-sky-200/70 dark:border-sky-800/60 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-sky-700 dark:text-sky-300">
-                    <Target size={14} />
-                    <span>기획 배경 & 해결 과제</span>
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {project.detailSpec.background}
-                  </p>
-                </div>
-              )}
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                {project.description}
+              </p>
 
               {/* 기술 스택 태그 */}
               <div className="flex flex-wrap gap-1.5 pt-2">
@@ -159,63 +134,23 @@ export default function ProjectDetailPage({ projects, profile, darkMode, setDark
               )}
             </div>
           </div>
-
-          {/* 서브 퀵 점프 탭바 */}
-          <div className="mt-8 pt-6 border-t border-slate-200/70 dark:border-slate-800 flex items-center gap-2 overflow-x-auto pb-1">
-            <span className="text-xs font-bold text-slate-400 mr-2 flex-shrink-0">
-              상세 목차 바로가기:
-            </span>
-            <button
-              onClick={() => scrollToSubSection('spec-requirements')}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950 text-slate-700 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-400 transition-colors flex items-center gap-1.5 flex-shrink-0"
-            >
-              <FileCode size={13} />
-              <span>요구사항 정의서</span>
-            </button>
-            <button
-              onClick={() => scrollToSubSection('spec-diagram')}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1.5 flex-shrink-0"
-            >
-              <Layers size={13} />
-              <span>기능 다이어그램</span>
-            </button>
-            <button
-              onClick={() => scrollToSubSection('spec-erd')}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950 text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors flex items-center gap-1.5 flex-shrink-0"
-            >
-              <Database size={13} />
-              <span>ERD 설계</span>
-            </button>
-            <button
-              onClick={() => scrollToSubSection('spec-troubleshooting')}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950 text-slate-700 dark:text-slate-200 hover:text-rose-600 dark:hover:text-rose-400 transition-colors flex items-center gap-1.5 flex-shrink-0"
-            >
-              <Wrench size={13} />
-              <span>트러블슈팅</span>
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* 스크롤 다운 시 차례대로 펼쳐지는 상세 내역들 */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-4">
-        {/* 1. 요구사항 정의서 */}
-        <RequirementsView requirements={project.detailSpec?.requirements} />
+      {/* 본문 섹션들 */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        {/* 1. 나의 역할 및 인프라 아키텍처 섹션 */}
+        <RoleOverviewSection
+          myRole={project.myRole}
+          techStack={project.techStack}
+        />
 
-        {/* 2. 기능 및 시스템 아키텍처 다이어그램 */}
-        <DiagramView diagram={project.detailSpec?.diagram} />
-
-        {/* 3. 데이터베이스 ERD */}
-        <ErdView erd={project.detailSpec?.erd} />
-
-        {/* 4. 트러블슈팅 및 문제해결 */}
-        <TroubleShootingView troubleshooting={project.detailSpec?.troubleshooting} />
+        {/* 2. 핵심 기술적 도전 및 트러블슈팅 (ACT 기반 3단계 스토리) */}
+        <EngineeringStorySection acts={project.acts} />
       </main>
 
       {/* 하단 푸터 */}
       <Footer profile={profile} />
-
-      {/* 최상단 이동 버튼 */}
       <FloatingTopBtn />
     </div>
   );

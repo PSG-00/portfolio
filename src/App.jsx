@@ -86,7 +86,7 @@ function HomeView({ darkMode, setDarkMode }) {
           <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1" />
         </div>
 
-        {/* 프로젝트 1 & 2 */}
+        {/* 프로젝트 1 & 2 요약 */}
         {portfolioData.projects.map((proj) => (
           <ProjectSection key={proj.id} project={proj} />
         ))}
@@ -94,11 +94,11 @@ function HomeView({ darkMode, setDarkMode }) {
         {/* 경력 사항 */}
         <CareerSection careers={portfolioData.careers} />
 
-        {/* 자격증 */}
-        <CertSection certifications={portfolioData.certifications} />
-
         {/* 활동 및 교육 */}
         <EducationSection education={portfolioData.education} />
+
+        {/* 자격증 */}
+        <CertSection certifications={portfolioData.certifications} />
       </main>
 
       {/* 푸터 */}

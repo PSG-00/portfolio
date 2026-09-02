@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Globe, Mail, FileText, FileDown, Check, ExternalLink, GraduationCap } from 'lucide-react';
+import { Globe, Mail, Phone, FileText, Check, GraduationCap } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '../Common/Icons';
 
 export default function ProfileCard({ profile }) {
@@ -35,13 +35,22 @@ export default function ProfileCard({ profile }) {
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {profile.name}
           </h1>
-          <p className="text-sm sm:text-base font-medium text-sky-600 dark:text-sky-400 mt-1">
+          <p className="text-base sm:text-lg font-bold text-sky-600 dark:text-sky-400 mt-1">
             {profile.role}
           </p>
 
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 flex items-center gap-1">
-            <span className="font-mono">{profile.email}</span>
-          </p>
+          <div className="mt-3 space-y-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-mono">
+            <p className="flex items-center gap-2">
+              <Mail size={15} className="text-sky-500 flex-shrink-0" />
+              <span>{profile.email}</span>
+            </p>
+            {profile.phone && (
+              <p className="flex items-center gap-2">
+                <Phone size={15} className="text-sky-500 flex-shrink-0" />
+                <span>{profile.phone}</span>
+              </p>
+            )}
+          </div>
 
           {/* 학력 정보 뱃지 */}
           {profile.education && (
@@ -53,17 +62,17 @@ export default function ProfileCard({ profile }) {
         </div>
       </div>
 
-      {/* 하단 소셜/외부 링크 & 다운로드 버튼 그룹 */}
+      {/* 하단 소셜/외부 링크 & 이력서 다운로드 버튼 그룹 */}
       <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-slate-800">
         <div className="grid grid-cols-4 gap-2">
-          {/* 1행: 깃허브, 블로그, 링크드인, 이메일 (각 1칸 차지) */}
+          {/* 1행: 깃허브, 블로그, 링크드인, 이메일 복사 */}
           {profile.github && (
             <a
               href={profile.github}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
-              title="GitHub"
+              title="GitHub (github.com/PSG-00)"
             >
               <GithubIcon size={18} />
             </a>
@@ -74,7 +83,7 @@ export default function ProfileCard({ profile }) {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
-              title="Tech Blog"
+              title="Tech Blog (memo50984.tistory.com)"
             >
               <Globe size={18} />
             </a>
@@ -103,29 +112,16 @@ export default function ProfileCard({ profile }) {
             )}
           </button>
 
-          {/* 2행: 이력서 & 포트폴리오 (각각 2칸 차지, 파란색 통일) */}
-          {profile.resumeUrl && (
-            <a
-              href={profile.resumeUrl}
-              download={`이력서_${profile.name}.pdf`}
-              className="col-span-2 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shadow-sm shadow-sky-500/25"
-              title="이력서 파일 다운로드 (public/resume.pdf)"
-            >
-              <FileText size={14} />
-              <span>이력서</span>
-            </a>
-          )}
-          {profile.portfolioPdfUrl && (
-            <a
-              href={profile.portfolioPdfUrl}
-              download={`포트폴리오_${profile.name}.pdf`}
-              className="col-span-2 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shadow-sm shadow-sky-500/25"
-              title="포트폴리오 PDF 다운로드 (public/portfolio.pdf)"
-            >
-              <FileDown size={14} />
-              <span>포트폴리오</span>
-            </a>
-          )}
+          {/* 2행: 이력서 다운로드 버튼 (전체 4칸 차지) */}
+          <a
+            href="/resume.pdf"
+            download={`이력서_${profile.name}.pdf`}
+            className="col-span-4 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shadow-sm shadow-sky-500/25 mt-1"
+            title="이력서 PDF 다운로드"
+          >
+            <FileText size={15} />
+            <span>이력서 다운로드 (PDF)</span>
+          </a>
         </div>
       </div>
     </div>
