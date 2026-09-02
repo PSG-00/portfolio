@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon, Sparkles, Menu, X } from 'lucide-react';
+import InfraStatusBadge from './InfraStatusBadge';
 
 export default function Navbar({ name, quickNavItems, activeSection, onNavigate, darkMode, setDarkMode }) {
   const [scrolled, setScrolled] = useState(false);
@@ -67,8 +68,10 @@ export default function Navbar({ name, quickNavItems, activeSection, onNavigate,
             })}
           </div>
 
-          {/* 우측 도구 모음: 다크모드 토글 & 모바일 햄버거 메뉴 */}
+          {/* 우측 도구 모음: 인프라 상태 뱃지 & 다크모드 토글 & 모바일 햄버거 메뉴 */}
           <div className="flex items-center gap-2">
+            <InfraStatusBadge />
+
             <button
               onClick={() => setDarkMode(!darkMode)}
               className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
