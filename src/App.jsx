@@ -12,7 +12,7 @@ import FloatingTopBtn from './components/Common/FloatingTopBtn';
 import ProjectDetailPage from './components/ProjectDetail/ProjectDetailPage';
 
 function HomeView({ darkMode, setDarkMode }) {
-  const [activeSection, setActiveSection] = useState('project-1');
+  const [activeSection, setActiveSection] = useState('profile');
 
   // 부드러운 스크롤 이동 핸들러 (상단 헤더 오프셋 반영)
   const scrollToSection = useCallback((id) => {
@@ -35,8 +35,22 @@ function HomeView({ darkMode, setDarkMode }) {
     const sectionIds = portfolioData.quickNavItems.map((item) => item.id);
 
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 140;
+      // 1. 최상단 영역 (프로필 활성화)
+      if (window.scrollY < 120) {
+        setActiveSection('profile');
+        return;
+      }
 
+      // 2. 최하단 도달 시 (마지막 자격증 섹션 강제 활성화)
+      const isAtBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60;
+      if (isAtBottom) {
+        setActiveSection(sectionIds[sectionIds.length - 1]);
+        return;
+      }
+
+      // 3. 중간 섹션 스크롤스파이
+      const scrollPosition = window.scrollY + 160;
       for (let i = sectionIds.length - 1; i >= 0; i--) {
         const id = sectionIds[i];
         const element = document.getElementById(id);

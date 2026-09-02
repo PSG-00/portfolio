@@ -37,14 +37,11 @@ export default function Navbar({ name, quickNavItems, activeSection, onNavigate,
           {/* 로고 / 타이틀 */}
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 group text-left"
+            className="flex items-center gap-1 group text-left"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:rotate-6 transition-transform">
-              {name ? name[0] : 'P'}
-            </div>
-            <span className="font-bold text-slate-900 dark:text-white tracking-tight text-base group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+            <span className="font-extrabold text-slate-900 dark:text-white tracking-tight text-lg group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               {name}
-              <span className="text-sky-500 font-mono text-xs ml-1">.portfolio</span>
+              <span className="text-sky-500 font-mono text-sm ml-1 font-semibold">.portfolio</span>
             </span>
           </button>
 

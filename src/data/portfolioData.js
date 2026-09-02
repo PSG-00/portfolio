@@ -51,11 +51,12 @@ export const portfolioData = {
   },
 
   quickNavItems: [
+    { id: "profile", label: "프로필", category: "About", desc: "소개 및 인프라 운영" },
     { id: "project-1", label: "모두의 플리", category: "Project", desc: "글로벌 컨텐츠 평점 플랫폼" },
     { id: "project-2", label: "모뉴", category: "Project", desc: "키워드 기반 뉴스 수집 플랫폼" },
     { id: "career", label: "경력", category: "Career", desc: "실무 인턴 이력" },
-    { id: "education", label: "교육 및 활동", category: "Activities", desc: "부트캠프 및 학력" },
-    { id: "certifications", label: "자격증", category: "Certificates", desc: "공인 자격 및 면허" },
+    { id: "education", label: "교육 및 활동", category: "Activities", desc: "실무 부트캠프" },
+    { id: "certifications", label: "자격증", category: "Certificates", desc: "공인 SQLD 자격" },
   ],
 
   projects: [
