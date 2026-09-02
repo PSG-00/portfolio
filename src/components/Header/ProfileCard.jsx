@@ -114,7 +114,7 @@ export default function ProfileCard({ profile }) {
 
           {/* 2행: 이력서 다운로드 버튼 (전체 4칸 차지) */}
           <a
-            href="/resume.pdf"
+            href="./resume.pdf"
             download={`이력서_${profile.name}.pdf`}
             className="col-span-4 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all shadow-sm shadow-sky-500/25 mt-1"
             title="이력서 PDF 다운로드"

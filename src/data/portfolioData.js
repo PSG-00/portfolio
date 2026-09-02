@@ -1,9 +1,9 @@
 export const portfolioData = {
   profile: {
     name: "박성국",
-    role: "Backend Developer",
-    avatar: "/박성국.jpg",
-    statusBadge: "새로운 도전을 준비중입니다",
+    role: "Backend Developer & DevOps Engineer",
+    avatar: "./profile.jpg",
+    statusBadge: "태풍을 막아내는 매미성처럼",
     email: "cdjsdj1902@gmail.com",
     phone: "010-6480-6782",
     github: "https://github.com/PSG-00",
@@ -315,12 +315,12 @@ export const portfolioData = {
               {
                 title: "RDB (PostgreSQL + QueryDSL) 실측 결과",
                 desc: "P95 응답 지연 1.02s, 평균 590.13ms 소요",
-                src: "/images/k6_rdb_result.png",
+                src: "./images/k6_rdb_result.png",
               },
               {
                 title: "ElasticSearch 역색인 검색 실측 결과",
                 desc: "P95 응답 지연 13.02ms, 평균 6.44ms로 98.7% 개선",
-                src: "/images/k6_es_result.png",
+                src: "./images/k6_es_result.png",
               },
             ],
           },
