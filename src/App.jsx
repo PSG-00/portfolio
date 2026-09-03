@@ -146,13 +146,24 @@ export default function App() {
     }
   }, [darkMode]);
 
-  // GA4 페이지 뷰 추적 (HashRouter 경로 변경 감지)
+  // GA4 페이지 뷰 추적 (HashRouter 경로 및 동적 페이지 타이틀 감지)
   const location = useLocation();
   useEffect(() => {
+    // 1. 현재 라우트에 따른 동적 페이지 제목 설정
+    let pageTitle = "박성국's 포트폴리오 | Backend & DevOps";
+    if (location.pathname.includes('project-1')) {
+      pageTitle = "모두의 플리 (MOPL) 상세 | 박성국's 포트폴리오";
+    } else if (location.pathname.includes('project-2')) {
+      pageTitle = "모뉴 (MONEW) 상세 | 박성국's 포트폴리오";
+    }
+    document.title = pageTitle;
+
+    // 2. GA4에 명시적으로 page_view 이벤트 발송
     if (typeof window.gtag === 'function') {
-      window.gtag('config', 'G-WLRP4EQJR7', {
-        page_path: location.pathname + location.search + (window.location.hash || ''),
-        page_title: document.title,
+      window.gtag('event', 'page_view', {
+        page_title: pageTitle,
+        page_location: window.location.href,
+        page_path: location.pathname, // '/' or '/project/project-1' or '/project/project-2'
       });
     }
   }, [location]);
