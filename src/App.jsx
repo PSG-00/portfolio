@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { portfolioData } from './data/portfolioData';
 import Navbar from './components/Common/Navbar';
 import HeroSection from './components/Header/HeroSection';
@@ -145,6 +145,17 @@ export default function App() {
       localStorage.setItem('theme', 'light');
     }
   }, [darkMode]);
+
+  // GA4 페이지 뷰 추적 (HashRouter 경로 변경 감지)
+  const location = useLocation();
+  useEffect(() => {
+    if (typeof window.gtag === 'function') {
+      window.gtag('config', 'G-WLRP4EQJR7', {
+        page_path: location.pathname + location.search + (window.location.hash || ''),
+        page_title: document.title,
+      });
+    }
+  }, [location]);
 
   return (
     <Routes>
