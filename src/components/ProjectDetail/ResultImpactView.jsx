@@ -1,7 +1,18 @@
-import React from 'react';
-import { Award, TrendingUp, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Award, TrendingUp, CheckCircle, ZoomIn, X } from 'lucide-react';
 
 export default function ResultImpactView({ actNumber, category, result }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // ESC 키로 모달 닫기
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setSelectedImage(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   if (!result) return null;
 
   return (
@@ -18,29 +29,39 @@ export default function ResultImpactView({ actNumber, category, result }) {
         </div>
       </div>
 
-      {/* 2. 중단 시각 자료: K6 벤치마크 2분할 비교 또는 풀 와이드 비주얼 */}
+      {/* 2. 중단 시각 자료: 실측 증빙 그리드 또는 단일 비주얼 */}
       <div className="mt-6">
         {result.benchmarkImages?.length > 0 ? (
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono font-black text-sky-600 dark:text-sky-400 uppercase tracking-widest mb-3">
-              <TrendingUp size={15} />
-              <span>K6 LOAD TEST REAL-BENCHMARK (실측 결과 증빙)</span>
+            <div className="flex items-center justify-between gap-2 mb-3">
+              <div className="flex items-center gap-2 text-xs font-mono font-black text-sky-600 dark:text-sky-400 uppercase tracking-widest">
+                <TrendingUp size={15} />
+                <span>{result.benchmarkTitle || "REAL-BENCHMARK & SYSTEM EVIDENCE (실측 결과 증빙)"}</span>
+              </div>
+              <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500 hidden sm:inline-block">
+                클릭하여 확대보기
+              </span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className={`grid grid-cols-1 ${result.benchmarkImages.length > 1 ? 'md:grid-cols-2' : ''} gap-5`}>
               {result.benchmarkImages.map((img, idx) => (
                 <div
                   key={idx}
-                  className="rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 bg-slate-950 p-2 shadow-md group"
+                  onClick={() => setSelectedImage(img)}
+                  className="rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 bg-slate-950 p-2 shadow-md group cursor-zoom-in transition-all duration-300 hover:border-sky-500/50 hover:shadow-sky-500/10 hover:shadow-lg"
                 >
                   <div className="px-3 py-2 flex items-center justify-between text-xs font-mono text-slate-300 border-b border-slate-800/80">
                     <span className="font-bold text-sky-400">{img.title}</span>
-                    <span className="text-[11px] text-slate-400">{img.desc}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-slate-400 hidden sm:inline">{img.desc}</span>
+                      <ZoomIn size={13} className="text-slate-400 group-hover:text-sky-400 transition-colors" />
+                    </div>
                   </div>
-                  <div className="relative overflow-hidden rounded-xl mt-1">
+                  <div className="relative overflow-hidden rounded-xl mt-1 bg-slate-900/50 flex items-center justify-center min-h-[160px]">
                     <img
                       src={img.src}
                       alt={img.title}
-                      className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                      className="w-full h-auto max-h-[380px] object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                      loading="lazy"
                     />
                   </div>
                 </div>
@@ -49,16 +70,62 @@ export default function ResultImpactView({ actNumber, category, result }) {
           </div>
         ) : (
           result.image && (
-            <div className="rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 max-h-80 shadow-md">
+            <div
+              onClick={() => setSelectedImage({ title: result.title, desc: result.summary, src: result.image })}
+              className="rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 max-h-80 shadow-md group cursor-zoom-in relative"
+            >
               <img
                 src={result.image}
                 alt={result.title}
-                className="w-full h-full object-cover object-center"
+                className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.01]"
               />
+              <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-slate-950/75 backdrop-blur-xs text-[11px] font-mono text-slate-300 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                <ZoomIn size={13} />
+                <span>확대하기</span>
+              </div>
             </div>
           )
         )}
       </div>
+
+      {/* 이미지 확대 모달 (Lightbox) */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 sm:p-6 animate-in fade-in duration-200"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div
+            className="relative max-w-5xl w-full max-h-[92vh] bg-slate-900 border border-slate-700/80 rounded-2xl overflow-hidden p-3 sm:p-4 shadow-2xl flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 모달 상단 */}
+            <div className="flex items-center justify-between px-2 py-2 border-b border-slate-800 text-slate-200">
+              <div className="pr-4">
+                <h4 className="font-bold text-sky-400 text-sm sm:text-base">{selectedImage.title}</h4>
+                {selectedImage.desc && (
+                  <p className="text-xs text-slate-400 mt-0.5">{selectedImage.desc}</p>
+                )}
+              </div>
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex-shrink-0"
+                title="닫기 (ESC)"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* 모달 이미지 본문 */}
+            <div className="overflow-auto max-h-[calc(92vh-90px)] flex items-center justify-center p-2 bg-slate-950/60 rounded-xl mt-3">
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.title}
+                className="max-w-full max-h-[78vh] object-contain rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 3. 하단 2분할 레이아웃: 요약 서술 & 굵직한 메트릭 카드 스택 */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8 items-center pt-6 border-t border-slate-200/70 dark:border-slate-800 print:border-slate-300">

@@ -3,12 +3,12 @@ export const portfolioData = {
     name: "박성국",
     role: "Backend Developer & DevOps Engineer",
     avatar: "./profile.jpg",
-    statusBadge: "태풍을 막아내는 매미성처럼",
+    statusBadge: "새로운 도전을 준비중",
     email: "cdjsdj1902@gmail.com",
     phone: "010-6480-6782",
     github: "https://github.com/PSG-00",
     blog: "https://memo50984.tistory.com",
-    linkedin: "https://linkedin.com",
+    linkedin: "https://www.linkedin.com/in/%EC%84%B1%EA%B5%AD-%EB%B0%95-198453433/",
     education: `조선대학교 컴퓨터공학과 학사 졸업
 (4.0 / 4.5)`,
   },
@@ -32,7 +32,7 @@ export const portfolioData = {
       },
       {
         label: "고가용성 인프라",
-        desc: "AWS ALB + ECS 롤링 무중단 배포 · CI/CD 파이프라인",
+        desc: "AWS ALB + ECS 태스크 기반 무중단 배포 · CI/CD 파이프라인",
       },
     ],
     skills: [
@@ -68,7 +68,7 @@ export const portfolioData = {
       subtitle: "외부 API 기반 콘텐츠 자동 수집 및 글로벌 컨텐츠 평점 플랫폼",
       period: "2026.06.19 - 2026.07.29",
       role: "콘텐츠 도메인 구축 및 수집 파이프라인, CI/CD & 배포 인프라 구축 (기여도 35%)",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&fit=crop&q=80",
+      image: "./images/mopl_main.png",
       description: "TMDB와 SportsDB 등 다양한 외부 오픈 API로부터 매일 대량의 영화/스포츠 콘텐츠를 수집·가공하고, 안정적인 검색 및 평점 기능을 제공하는 플랫폼입니다. 외부 장애 격리, 커넥션 풀 물리 분리, 그리고 ElasticSearch 성능 최적화를 주도했습니다.",
       keyFeatures: [
         "Spring Batch + Retry + 메타데이터 스케줄러 기반 외부 API 장애 격리 및 데이터 무유실 복구 체계",
@@ -215,7 +215,19 @@ export const portfolioData = {
               { label: "웹 서비스 영향도", value: "0%", desc: "커넥션 풀 물리 분리 + Lazy 프록시" },
               { label: "영구 장애 감지", value: "실시간", desc: "isFatalFailure() + Grafana & Discord" },
             ],
-            image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&auto=format&fit=crop&q=80",
+            benchmarkTitle: "GRAFANA MONITORING & REAL-TIME ALERTS (실측 관제 및 경보 증빙)",
+            benchmarkImages: [
+              {
+                title: "Grafana 실시간 배치 잡 상태 및 API 호출 성공률 (100%)",
+                desc: "TMDB/SportsDB 수집 잡 COMPLETED 및 API 호출 성공률 100% 모니터링",
+                src: "./images/mopl_api_success_rate.png",
+              },
+              {
+                title: "Grafana ➔ Discord 3회 연속 실패 경보 (FIRING)",
+                desc: "치명적 장애 3회 연속 감지 시 즉시 Critical 경보 발송 및 자동 잠금",
+                src: "./images/mopl_grafana_alert.png",
+              },
+            ],
           },
         },
         {
@@ -312,6 +324,7 @@ export const portfolioData = {
               { label: "초당 처리량 (Throughput)", value: "87.48 ➔ 137.20 req/s", desc: "+56.8% 향상으로 동시 요청 수용력 증대" },
               { label: "부하 테스트 에러율", value: "0.00%", desc: "200명 동시 요청 9,741건 무장애 통과" },
             ],
+            benchmarkTitle: "K6 LOAD TEST REAL-BENCHMARK (부하 테스트 실측 결과 증빙)",
             benchmarkImages: [
               {
                 title: "RDB (PostgreSQL + QueryDSL) 실측 결과",
@@ -336,7 +349,7 @@ export const portfolioData = {
       subtitle: "키워드 기반 관심사 뉴스를 수집하고 공유하는 소셜 기반 플랫폼",
       period: "2026.04.14 - 2026.05.08",
       role: "RSS 및 네이버 뉴스 API 수집 엔진, 크롤링 & 다중 Fallback 파이프라인 개발 (기여도 25%)",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&auto=format&fit=crop&q=80",
+      image: "./images/monew_main.png",
       description: "다양한 언론사의 RSS 피드와 네이버 뉴스 API로부터 기사를 수집하고, 사용자 맞춤 키워드 뉴스 및 요약을 제공하는 소셜 플랫폼입니다. 매체별 인코딩 파편화 해결과 요약 미제공 매체를 위한 동적 크롤링 및 Groq ➔ Gemini 다중 LLM Fallback 아키텍처를 주도했습니다.",
       keyFeatures: [
         "XML/HTML/HTTP 헤더 3중 인코딩 감지 컨버터 및 ROME SyndFeed 기반 추상화 수집 파이프라인 구축",
@@ -467,7 +480,14 @@ export const portfolioData = {
               { label: "한글 텍스트 깨짐율", value: "0%", desc: "XML·HTML·HTTP 3중 인코딩 감지" },
               { label: "통합 수집 매체 수", value: "10개 언론사", desc: "한경, 조선, 연합, JTBC, 동아, 매경 등" },
             ],
-            image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&auto=format&fit=crop&q=80",
+            benchmarkTitle: "RSS FEED SOURCES (10개 언론사 RSS 피드 통합 수집 증빙)",
+            benchmarkImages: [
+              {
+                title: "10개 언론사 RSS 피드 통합 수집 및 필터링 화면",
+                desc: "조선, 동아, 한경, JTBC, 경향 등 10개 언론사 RSS 피드 연동 및 수집",
+                src: "./images/monew_rss_10_sources.png",
+              },
+            ],
           },
         },
         {
@@ -564,7 +584,14 @@ export const portfolioData = {
               { label: "LLM 가용성", value: "99.9%", desc: "Gemini 다중 Fallback으로 무중단 보장" },
               { label: "크롤링 봇 차단율", value: "0%", desc: "인메모리 캐시 기반 중복 요청 방어" },
             ],
-            image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&auto=format&fit=crop&q=80",
+            benchmarkTitle: "CRAWLER & ARTICLE RECOVERY (요약 미제공 매체 기사 복구 증빙)",
+            benchmarkImages: [
+              {
+                title: "한국경제(HANKYUNG) 등 요약 미제공 매체 기사 복구 화면",
+                desc: "요약 누락 매체 필터링 및 조건부 Jsoup 본문 크롤링을 통한 실시간 복구",
+                src: "./images/monew_hankyung_crawling.png",
+              },
+            ],
           },
         },
       ],

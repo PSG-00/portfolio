@@ -43,16 +43,22 @@ export default function ProjectSection({ project }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6 items-start">
           {/* 이미지 영역 */}
           <div className="lg:col-span-6">
-            <div className="relative rounded-2xl overflow-hidden shadow-lg group border border-slate-200/80 dark:border-slate-800">
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-64 sm:h-80 object-cover object-center transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                <p className="text-xs text-white/90">{project.subtitle}</p>
+            <Link to={`/project/${project.id}`} className="block group" title={`${project.title} 상세 보기`}>
+              <div className="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200/80 dark:border-slate-800 bg-slate-950">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-64 sm:h-80 object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
+                  <p className="text-xs text-white/90 font-medium line-clamp-1">{project.subtitle}</p>
+                  <span className="text-[11px] font-mono text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded-md border border-sky-800/80 flex items-center gap-1 flex-shrink-0 ml-2">
+                    상세보기 <ArrowRight size={11} />
+                  </span>
+                </div>
               </div>
-            </div>
+            </Link>
 
             {/* 링크 버튼들: [라이브 데모] - [GitHub] - [프로젝트 상세] */}
             <div className="flex flex-wrap items-center gap-2 mt-4">
