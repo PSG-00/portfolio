@@ -163,9 +163,9 @@ export const portfolioData = {
             pipeline: [
               {
                 step: "01",
-                title: "인메모리 흡수 & 사전 캐싱",
-                desc: "@Retryable 지수 백오프로 429/5xx 즉시 복구. TmdbGenreCache로 스텝 시작 전 장르 사전 적재하여 청크 중 DB SELECT 0회 달성",
-                tech: "Spring Retry / Caffeine",
+                title: "청크 중복 제거 & IN 쿼리 일괄 조회",
+                desc: "청크 유입 시 Set으로 인메모리 중복을 거르고, providerId IN 절 1회 쿼리로 DB 존재 여부를 일괄 조회하여 N+1 SELECT 방지",
+                tech: "Spring Batch Chunk / IN Query",
               },
               {
                 step: "02",
@@ -196,22 +196,150 @@ export const portfolioData = {
                 desc: "외부 API 네트워크 통신 대기 동안 DB 커넥션을 물고 있지 않고, 실제 SQL 쿼리가 날아가는 시점에만 커넥션을 획득하여 병목 해소",
               },
               {
-                name: "사전 조립 캐시로 SELECT 쿼리 0회 달성",
-                desc: "스텝 시작 시점에 장르 데이터를 DB IN 쿼리 1회로 메모리에 적재하여 수천 번의 청크가 도는 동안 태그 조회를 위한 DB 조회 0건 보장",
+                name: "청크 내 인메모리 Set 중복 제거 & IN 절 일괄 조회 (N+1 방지)",
+                desc: "청크마다 유입되는 N개 아이템을 하나씩 단건 SELECT 하지 않고, Set<ProviderKey>로 1차 중복을 제거한 뒤 findByProviderAndProviderIdIn 1회 쿼리로 존재 여부를 일괄 확인하여 N+1 쿼리 제거 및 saveAll 일괄 저장",
               },
               {
                 name: "TransactionSynchronization afterCommit 메트릭 정합성",
                 desc: "DB 트랜잭션이 성공적으로 커밋된 직후에만 프로메테우스 카운터를 올려 롤백 시 메트릭이 왜곡되는 불일치 현상 방지",
               },
             ],
-            codeSnippets: [],
+            codeSnippets: [
+              {
+                tabName: "ContentItemWriter.java",
+                fileName: "ContentItemWriter.java (청크 중복 제거 & IN 쿼리 N+1 방지)",
+                language: "java",
+                code: `/* 모든 콘텐츠 수집(배치) 스텝에서 공통으로 사용되는 영속화 라이터입니다. */
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class ContentItemWriter implements ItemWriter<Content> {
+
+  private final ContentRepository contentRepository;
+  private final MeterRegistry meterRegistry;
+
+  /*
+   * 청크 단위 저장 시, 청크 내 자체 중복 제거와 N+1 쿼리 문제를 해결하는 메서드입니다.
+   * chunkContents: 이번 청크 범위로 유입된 콘텐츠 엔티티 리스트
+   * uniqueKeys를 활용하여 청크 내에 동일하게 들어온 중복 데이터를 먼저 걸러냅니다.
+   * 중복이 제거된 대상들의 ID 목록으로 IN 쿼리를 날려 DB 존재 여부를 한 번에 조회합니다. (N+1 방지)
+   * DB에 존재하지 않는 최종 신규 아이템들만 saveAll()을 통해 일괄 저장합니다.
+   */
+  @Override
+  public void write(Chunk<? extends Content> chunk) {
+    List<? extends Content> chunkContents = chunk.getItems(); // 이번 청크 단위에 들어온 아이템
+    if (chunkContents.isEmpty()) {
+      return;
+    }
+
+    // 0. 청크 첫 번째 데이터를 통해 제공처(provider) 식별
+    ContentProvider provider = chunkContents.get(0).getProvider();
+    final int totalReceivedCount = chunkContents.size();
+
+    // 1. [청크 내 자체 중복 제거]
+    Set<ProviderKey> uniqueKeys = new HashSet<>();
+    List<Content> distinctContents = new ArrayList<>();
+
+    for (Content item : chunkContents) {
+      ProviderKey key = new ProviderKey(item.getProvider(), item.getProviderId());
+      if (uniqueKeys.add(key)) { // Set에 아이템의 키를 삽입하면서 중복이면 false 반환
+        distinctContents.add(item); // 중복이 아닌 키라면 아이템을 추가
+      }
+    }
+
+    // 2. [DB 존재 여부 일괄 조회 (IN 쿼리로 N+1 방지)]
+    List<String> providerIds =
+        distinctContents.stream().map(Content::getProviderId).toList();
+    Set<ProviderKey> dbExistingKeys =
+        contentRepository
+            .findByProviderAndProviderIdIn(provider, providerIds)
+            .stream()
+            .map(c -> new ProviderKey(c.getProvider(), c.getProviderId()))
+            .collect(Collectors.toSet());
+
+    // 3. [최종 저장 대상 필터링]
+    List<Content> contentsToSave = new ArrayList<>();
+    for (Content item : distinctContents) {
+      ProviderKey key = new ProviderKey(item.getProvider(), item.getProviderId());
+      if (!dbExistingKeys.contains(key)) { // DB에 없는 신규 컨텐츠라면
+        contentsToSave.add(item); // 저장할 대상에 추가
+      }
+    }
+
+    int savedCount = contentsToSave.size();
+    int dbDuplicateCount = distinctContents.size() - savedCount;
+
+    // 4. [신규 콘텐츠 일괄 저장]
+    if (!contentsToSave.isEmpty()) {
+      contentRepository.saveAll(contentsToSave);
+    }
+
+    // 5. [비즈니스 데이터 수집 메트릭 카운팅 (afterCommit 훅)]
+    final int chunkDuplicateCount = totalReceivedCount - distinctContents.size();
+    String contentType = chunkContents.get(0).getType().name().toLowerCase(Locale.ROOT);
+    String providerName = provider.name().toLowerCase(Locale.ROOT);
+    int duplicateSkippedCount = chunkDuplicateCount + dbDuplicateCount;
+
+    recordMetricsAfterCommit(contentType, providerName, savedCount, duplicateSkippedCount);
+
+    log.info(
+        "[{}] 저장 완료 - 수집: {}, 신규 저장: {}, DB 중복 제외: {}, 청크 내 중복 제외: {}",
+        provider,
+        totalReceivedCount,
+        savedCount,
+        dbDuplicateCount,
+        chunkDuplicateCount);
+  }
+
+  /*
+   * DB 트랜잭션이 성공적으로 커밋(Commit)된 직후에만 수집량 메트릭을 기록하는 헬퍼 메서드입니다.
+   * 롤백 시 지표가 과대 측정되는 정합성 불일치를 방지합니다.
+   */
+  private void recordMetricsAfterCommit(
+      String contentType, String providerName, int savedCount, int duplicateSkippedCount) {
+    Runnable recordTask =
+        () -> {
+          incrementCollectedItemsCounter(contentType, providerName, "new_saved", savedCount);
+          incrementCollectedItemsCounter(
+              contentType, providerName, "duplicate_skipped", duplicateSkippedCount);
+        };
+
+    if (TransactionSynchronizationManager.isActualTransactionActive()) {
+      TransactionSynchronizationManager.registerSynchronization(
+          new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+              recordTask.run();
+            }
+          });
+    } else {
+      recordTask.run();
+    }
+  }
+
+  /*
+   * 공통 메트릭 카운터를 증가시키는 내부 헬퍼 메서드입니다.
+   */
+  private void incrementCollectedItemsCounter(
+      String contentType, String providerName, String status, int count) {
+    Counter.builder("mopl.batch.collected.items.total")
+        .description("Total number of collected and processed items")
+        .tags("contentType", contentType, "provider", providerName, "status", status)
+        .register(meterRegistry)
+        .increment(count);
+  }
+
+  private record ProviderKey(ContentProvider provider, String providerId) {}
+}`,
+              },
+            ],
           },
           result: {
             title: "유실 없는 무중단 운영 및 웹 서비스 100% 격리",
             summary: "외부 API의 간헐적 장애, 영구 장애, 그리고 DB 커넥션 고갈 위협을 인메모리 지수 백오프, 커넥션 풀 분리 격리, 메타데이터 기반 체크포인트 재시작의 3단계 방어선으로 완벽히 통제했습니다. 피크 시간대 사용자 웹 서비스 영향도 0%, 데이터 유실 0건의 견고한 배치 파이프라인을 확립했습니다.",
             metrics: [
               { label: "데이터 유실률", value: "0%", desc: "Batch 메타데이터 기반 체크포인트 재시작" },
-              { label: "청크 반복 중 DB 쿼리", value: "0회", desc: "장르 사전 조립 캐시로 N+1 완전 차단" },
+              { label: "청크 중복 검증 쿼리", value: "N회 ➔ 1회", desc: "IN 쿼리 일괄 조회 및 Set 기반 N+1 방지" },
               { label: "웹 서비스 영향도", value: "0%", desc: "커넥션 풀 분리 격리 + Lazy 프록시" },
               { label: "영구 장애 감지", value: "실시간", desc: "isFatalFailure() + Grafana & Discord" },
             ],
