@@ -20,7 +20,7 @@ export const portfolioData = {
     
 외부 API 호출 실패 시 데이터 유실을 막기 위한 장애 격리 전략과 복구 파이프라인을 설계하며, 실제 상용 서비스의 예상 트래픽 기반의 부하 테스트(K6)를 통해 쿼리 병목을 진단하고 검색 엔진(ElasticSearch)으로 성능을 극대화합니다.
 
-나아가 급격한 트래픽 변동 상황 속에서도 서비스가 중단 없이 유지되도록 오토 스케일링과 클라우드 배포 인프라를 지속적으로 연구합니다.`,
+나아가 급격한 트래픽 변동 상황 속에서도 서비스가 중단 없이 유지되도록 무중단 배포와 클라우드 배포 인프라를 지속적으로 연구합니다.`,
     highlights: [
       {
         label: "장애 격리 & 복구",
@@ -69,12 +69,12 @@ export const portfolioData = {
       period: "2026.06.19 - 2026.07.29",
       role: "콘텐츠 도메인 구축 및 수집 파이프라인, CI/CD & 배포 인프라 구축 (기여도 35%)",
       image: "./images/mopl_main.png",
-      description: "TMDB와 SportsDB 등 다양한 외부 오픈 API로부터 매일 대량의 영화/스포츠 콘텐츠를 수집·가공하고, 안정적인 검색 및 평점 기능을 제공하는 플랫폼입니다. 외부 장애 격리, 커넥션 풀 물리 분리, 그리고 ElasticSearch 성능 최적화를 주도했습니다.",
+      description: "TMDB와 SportsDB 등 다양한 외부 오픈 API로부터 매일 대량의 영화/스포츠 콘텐츠를 수집·가공하고, 안정적인 검색 및 평점 기능을 제공하는 플랫폼입니다. 외부 장애 격리, 커넥션 풀 분리, 그리고 ElasticSearch 성능 최적화를 주도했습니다.",
       keyFeatures: [
-        "Spring Batch + Retry + 메타데이터 스케줄러 기반 외부 API 장애 격리 및 데이터 무유실 복구 체계",
-        "HikariCP 커넥션 풀 물리 분리(API/배치) 및 LazyConnectionDataSourceProxy로 DB 커넥션 병목 원천 차단",
+        "Spring Batch Chunk 모델 + Spring Retry 및 배치 메타데이터 기반 복구 스케줄러 구현",
+        "API/배치 간 HikariCP 커넥션 풀 독립 분리 및 LazyConnectionDataSourceProxy 도입으로 커넥션 독점 및 지연 방지",
         "K6 부하 테스트 기반 RDB Full Table Scan 병목 진단 및 ElasticSearch 전환으로 P95 속도 98.7% 개선 (1.02s ➔ 13.02ms)",
-        "AWS ALB(리버스 프록시) + ECS 롤링 정책 기반 무중단 배포 및 트래픽 연동 오토스케일링 인프라 구축",
+        "AWS ALB(리버스 프록시) + ECS 롤링 정책 기반 무중단 배포 및 트래픽 모니터링 기반 태스크 스케일링 인프라 구축",
       ],
       techStack: [
         "Java 17",
@@ -107,12 +107,12 @@ export const portfolioData = {
             desc: "하루 500회 이상 호출되는 TMDB/SportsDB 데이터를 Spring Batch 청크 모델로 안정적으로 수집·가공하는 파이프라인을 구축했습니다.",
           },
           {
-            title: "배치 전용 DB 커넥션 풀 물리 격리 및 Lazy 프록시",
-            desc: "대용량 배치가 DB 커넥션을 독점하여 실시간 유저 API가 마비되는 현상을 막기 위해 HikariCP 풀을 물리 분리하고 지연 획득 프록시를 적용했습니다.",
+            title: "배치 전용 DB 커넥션 풀 독립 분리 및 Lazy 프록시 적용",
+            desc: "대용량 배치가 DB 커넥션을 독점하여 실시간 유저 API가 지연되는 현상을 방지하기 위해 HikariCP 풀을 API용과 배치용으로 분리하고 지연 획득 프록시를 적용했습니다.",
           },
           {
-            title: "AWS ECS 롤링 무중단 배포 및 오토스케일링",
-            desc: "ALB를 리버스 프록시로 두고 ECS Fargate 환경에서 롤링 업데이트 정책으로 무중단 배포를 구현하였으며, CPU/메모리 기반 오토스케일링을 구성했습니다.",
+            title: "AWS ECS 롤링 무중단 배포 및 트래픽 모니터링 기반 태스크 조정",
+            desc: "ALB를 리버스 프록시로 두고 ECS Fargate 환경에서 롤링 업데이트 정책으로 무중단 배포를 구현하였으며, 트래픽 모니터링을 통해 부하 상황에 맞춰 ECS 태스크를 직접 증설·조정할 수 있도록 구성했습니다.",
           },
         ],
       },
@@ -144,7 +144,7 @@ export const portfolioData = {
               {
                 id: "H1 → PAIN POINT 01",
                 title: "Spring Retry 지수 백오프로 일시 장애 즉시 흡수",
-                desc: "단기 네트워크 오류는 2s, 4s... 지수 백오프로 메모리 레벨에서 즉시 흡수하되 전체 배치 지연을 막기 위해 상한선(최대 3분) 설정",
+                desc: "단기 네트워크 오류 및 Rate Limit(429) 장애는 Spring Retry의 지수 백오프로 메모리 레벨에서 즉시 흡수",
               },
               {
                 id: "H2 → PAIN POINT 02",
@@ -169,8 +169,8 @@ export const portfolioData = {
               },
               {
                 step: "02",
-                title: "커넥션 풀 격리 & Lazy 프록시",
-                desc: "HikariPool을 API용(10개)과 배치용(5개)으로 물리 분리. LazyConnectionDataSourceProxy로 외부 통신 중 DB 커넥션 미점유",
+                title: "커넥션 풀 분리 & Lazy 프록시",
+                desc: "HikariPool을 API용(10개)과 배치용(5개)으로 분리 격리. LazyConnectionDataSourceProxy로 외부 통신 중 DB 커넥션 미점유",
                 tech: "HikariCP / Lazy Proxy",
               },
               {
@@ -182,14 +182,14 @@ export const portfolioData = {
               {
                 step: "04",
                 title: "정밀 관제 & 관리자 수동 재시작",
-                desc: "afterCommit() 훅으로 커밋된 데이터만 메트릭 카운팅. 3회 실패 시 영구 락 및 Discord Webhook 알림, 복구 API 제공",
+                desc: "afterCommit() 훅으로 커밋된 데이터만 메트릭 카운팅. 자동 복구 스케줄러가 3회 실패 시 영구 락 및 Discord Webhook 알림, 복구 API 제공",
                 tech: "Micrometer / Grafana",
               },
             ],
             technicalHighlights: [
               {
-                name: "HikariCP 커넥션 풀 물리 격리",
-                desc: "배치 작업이 DB 커넥션을 독점하여 실시간 사용자 API가 먹통이 되는 장애를 막기 위해 HikariPool을 API용과 배치용으로 물리 분리",
+                name: "HikariCP 커넥션 풀 독립 분리",
+                desc: "배치 작업이 DB 커넥션을 독점하여 실시간 사용자 API가 지연되는 현상을 막기 위해 HikariPool을 API용과 배치용으로 분리 격리",
               },
               {
                 name: "LazyConnectionDataSourceProxy 지연 획득",
@@ -208,11 +208,11 @@ export const portfolioData = {
           },
           result: {
             title: "유실 없는 무중단 운영 및 웹 서비스 100% 격리",
-            summary: "외부 API의 간헐적 장애, 영구 장애, 그리고 DB 커넥션 고갈 위협을 인메모리 지수 백오프, 커넥션 풀 물리 격리, 메타데이터 기반 체크포인트 재시작의 3단계 방어선으로 완벽히 통제했습니다. 피크 시간대 사용자 웹 서비스 영향도 0%, 데이터 유실 0건의 견고한 배치 파이프라인을 확립했습니다.",
+            summary: "외부 API의 간헐적 장애, 영구 장애, 그리고 DB 커넥션 고갈 위협을 인메모리 지수 백오프, 커넥션 풀 분리 격리, 메타데이터 기반 체크포인트 재시작의 3단계 방어선으로 완벽히 통제했습니다. 피크 시간대 사용자 웹 서비스 영향도 0%, 데이터 유실 0건의 견고한 배치 파이프라인을 확립했습니다.",
             metrics: [
               { label: "데이터 유실률", value: "0%", desc: "Batch 메타데이터 기반 체크포인트 재시작" },
               { label: "청크 반복 중 DB 쿼리", value: "0회", desc: "장르 사전 조립 캐시로 N+1 완전 차단" },
-              { label: "웹 서비스 영향도", value: "0%", desc: "커넥션 풀 물리 분리 + Lazy 프록시" },
+              { label: "웹 서비스 영향도", value: "0%", desc: "커넥션 풀 분리 격리 + Lazy 프록시" },
               { label: "영구 장애 감지", value: "실시간", desc: "isFatalFailure() + Grafana & Discord" },
             ],
             benchmarkTitle: "GRAFANA MONITORING & REAL-TIME ALERTS (실측 관제 및 경보 증빙)",
