@@ -150,7 +150,7 @@ export default function App() {
   const location = useLocation();
   useEffect(() => {
     // 1. 현재 라우트에 따른 동적 페이지 제목 설정
-    let pageTitle = "박성국's 포트폴리오 | Backend & DevOps";
+    let pageTitle = "박성국's 포트폴리오 | Backend Developer";
     if (location.pathname.includes('project-1')) {
       pageTitle = "모두의 플리 (MOPL) 상세 | 박성국's 포트폴리오";
     } else if (location.pathname.includes('project-2')) {
