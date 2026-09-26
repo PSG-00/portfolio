@@ -69,7 +69,7 @@ function HomeView({ darkMode, setDarkMode }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100/60 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300 font-sans">
+    <div className="site-shell min-h-screen        transition-colors duration-300 font-sans">
       {/* 상단 네비게이션 바 */}
       <Navbar
         name={portfolioData.profile.name}
@@ -80,19 +80,19 @@ function HomeView({ darkMode, setDarkMode }) {
         setDarkMode={setDarkMode}
       />
 
-      {/* 상단 Hero 3분할 영역: 왼쪽(프로필) | 가운데(자기소개) | 오른쪽(바로가기 메뉴) */}
-      <HeroSection
-        profile={portfolioData.profile}
-        about={portfolioData.about}
-        quickNavItems={portfolioData.quickNavItems}
-        activeSection={activeSection}
-        onNavigate={scrollToSection}
-      />
+      {/* 본문 메인 컨테이너 (Hero 3단 카드와 하위 프로젝트들이 완벽히 동일한 좌우 너비 및 여백 공유) */}
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 pb-20 pt-6 space-y-10">
+        {/* 상단 Hero 3분할 영역: 왼쪽(프로필) | 가운데(자기소개) | 오른쪽(바로가기 메뉴) */}
+        <HeroSection
+          profile={portfolioData.profile}
+          about={portfolioData.about}
+          quickNavItems={portfolioData.quickNavItems}
+          activeSection={activeSection}
+          onNavigate={scrollToSection}
+        />
 
-      {/* 본문 상세 섹션들 */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* 섹션 구분 안내 바 */}
-        <div className="flex items-center justify-center my-6">
+        <div className="flex items-center justify-center my-8">
           <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1" />
           <span className="px-4 text-xs font-mono font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">
             Detailed Portfolios & Background
